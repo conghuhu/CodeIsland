@@ -1667,6 +1667,7 @@ private struct MascotsPage: View {
     @ObservedObject private var l10n = L10n.shared
     @State private var previewStatus: AgentStatus = .processing
     @AppStorage(SettingsKey.mascotSpeed) private var mascotSpeed = SettingsDefaults.mascotSpeed
+    @AppStorage(SettingsKey.mascotAnimateExpanded) private var animateExpanded = SettingsDefaults.mascotAnimateExpanded
     @AppStorage(SettingsKey.defaultSource) private var defaultSource = SettingsDefaults.defaultSource
 
     private let mascotList: [(name: String, source: String, desc: String, color: Color)] = [
@@ -1725,6 +1726,13 @@ private struct MascotsPage: View {
                     get: { Double(mascotSpeed) },
                     set: { mascotSpeed = Int($0) }
                 ), in: 0...300, step: 25)
+
+                Toggle(isOn: $animateExpanded) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(l10n["animate_while_expanded"])
+                        Text(l10n["animate_while_expanded_desc"])
+                    }
+                }
 
                 Picker(selection: $defaultSource) {
                     ForEach(mascotList, id: \.source) { mascot in

@@ -82,6 +82,66 @@ final class MascotAnimationGateTests: XCTestCase {
         XCTAssertEqual(gate.epoch, stillEpoch + 1, "resuming must re-anchor the schedules")
     }
 
+    /// Settings → Mascots › "Animate while expanded" is opt-out: on by default,
+    /// and the collapsed bar keeps animating when it is off.
+    func testAnimateWhileExpandedIsOnByDefaultAndOptOut() {
+        XCTAssertTrue(
+            MascotAnimationGate.shouldAnimate(isVisible: true, isAwake: true, isExpanded: true)
+        )
+        XCTAssertFalse(
+            MascotAnimationGate.shouldAnimate(
+                isVisible: true, isAwake: true, isExpanded: true, animatesWhenExpanded: false
+            ),
+            "off must hold the mascots still while the panel is open"
+        )
+        XCTAssertTrue(
+            MascotAnimationGate.shouldAnimate(
+                isVisible: true, isAwake: true, isExpanded: false, animatesWhenExpanded: false
+            ),
+            "the collapsed bar keeps animating when the switch is off"
+        )
+    }
+
+    func testTurningExpandedAnimationOffStopsItAndBackOnReAnchors() {
+        let gate = MascotAnimationGate.shared
+        gate.setPanelVisible(true)
+        gate.setIdleSettled(false)
+        gate.setExpanded(true)
+        defer {
+            gate.setAnimatesWhenExpanded(true)
+            gate.setExpanded(false)
+        }
+        gate.setAnimatesWhenExpanded(true)
+        XCTAssertTrue(gate.animationsActive)
+
+        gate.setAnimatesWhenExpanded(false)
+        XCTAssertFalse(gate.animationsActive, "expanded + switch off = static mascots")
+        let pausedEpoch = gate.epoch
+
+        gate.setAnimatesWhenExpanded(true)
+        XCTAssertTrue(gate.animationsActive)
+        XCTAssertEqual(gate.epoch, pausedEpoch + 1, "resuming must re-anchor the schedules")
+    }
+
+    func testLeavingExpandedStateResumesAnimationsWhenSwitchIsOff() {
+        let gate = MascotAnimationGate.shared
+        defer {
+            gate.setAnimatesWhenExpanded(true)
+            gate.setExpanded(false)
+            gate.setIdleSettled(false)
+        }
+        gate.setPanelVisible(true)
+        gate.setIdleSettled(false)
+        gate.setAnimatesWhenExpanded(false)
+        gate.setExpanded(true)
+        XCTAssertFalse(gate.animationsActive)
+        let pausedEpoch = gate.epoch
+
+        gate.setExpanded(false)
+        XCTAssertTrue(gate.animationsActive, "collapsing resumes the mascots")
+        XCTAssertEqual(gate.epoch, pausedEpoch + 1, "resuming must re-anchor the schedules")
+    }
+
     func testSettlingDoesNotReAnchor() {
         let gate = MascotAnimationGate.shared
         gate.setIdleSettled(false)

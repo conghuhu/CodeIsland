@@ -395,6 +395,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2× Very Fast",
         "default_mascot": "Default Mascot",
         "default_mascot_desc": "Shown in the island when no sessions are active",
+        "animate_while_expanded": "Animate Mascots While Expanded",
+        "animate_while_expanded_desc": "Off keeps the mascots still while the panel is open. Turn it off if the open island feels laggy.",
 
         // Sound
         "enable_sound": "Enable Sound Effects",
@@ -990,6 +992,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2x Sehr schnell",
         "default_mascot": "Standard-Maskottchen",
         "default_mascot_desc": "Wird in der Island angezeigt, wenn keine Sitzungen aktiv sind",
+        "animate_while_expanded": "Maskottchen im ausgeklappten Zustand animieren",
+        "animate_while_expanded_desc": "Aus: Maskottchen bleiben im ausgeklappten Zustand still. Bei Ruckeln abschalten.",
 
         // Sound
         "enable_sound": "Soundeffekte aktivieren",
@@ -1585,6 +1589,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2× 极速",
         "default_mascot": "默认角色",
         "default_mascot_desc": "没有活跃会话时在灵动岛显示的角色",
+        "animate_while_expanded": "展开面板时播放吉祥物动画",
+        "animate_while_expanded_desc": "关闭后，展开面板时吉祥物保持静止；展开卡顿时可关掉。",
 
         // Sound
         "enable_sound": "启用音效",
@@ -2180,6 +2186,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2× 極速",
         "default_mascot": "預設角色",
         "default_mascot_desc": "沒有活躍會話時在靈動島顯示的角色",
+        "animate_while_expanded": "展開面板時播放吉祥物動畫",
+        "animate_while_expanded_desc": "關閉後，展開面板時吉祥物保持靜止；展開卡頓時可關掉。",
 
         // Sound
         "enable_sound": "啟用音效",
@@ -2775,6 +2783,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2× 超高速",
         "default_mascot": "デフォルトキャラ",
         "default_mascot_desc": "アクティブなセッションがないときにノッチに表示",
+        "animate_while_expanded": "展開中もマスコットをアニメーション",
+        "animate_while_expanded_desc": "オフにすると展開中はマスコットが静止します。展開時に重いと感じたらオフに。",
 
         // Sound
         "enable_sound": "効果音を有効化",
@@ -3370,6 +3380,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2× 매우 빠름",
         "default_mascot": "기본 캐릭터",
         "default_mascot_desc": "활성 세션이 없을 때 노치에 표시",
+        "animate_while_expanded": "펼친 상태에서 마스코트 애니메이션",
+        "animate_while_expanded_desc": "끄면 펼친 상태에서 마스코트가 정지합니다. 펼칠 때 버벅이면 끄세요.",
 
         // Sound
         "enable_sound": "사운드 효과 사용",
@@ -3965,6 +3977,8 @@ final class L10n: ObservableObject {
         "speed_very_fast": "2× Çok Hızlı",
         "default_mascot": "Varsayılan Maskot",
         "default_mascot_desc": "Aktif oturum yokken çentikte gösterilir",
+        "animate_while_expanded": "Genişletildiğinde maskotları canlandır",
+        "animate_while_expanded_desc": "Kapalıyken maskotlar genişletilmiş durumda durur. Genişletince takılıyorsa kapatın.",
 
         // Sound
         "enable_sound": "Ses Efektlerini Etkinleştir",

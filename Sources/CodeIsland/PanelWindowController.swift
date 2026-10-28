@@ -266,7 +266,7 @@ class PanelWindowController: NSObject, NSWindowDelegate {
         setupHorizontalDragMonitor()
         updatePosition()
         panel.orderFrontRegardless()
-        MascotAnimationGate.shared.setPanelVisible(true)
+        syncMascotAnimationGate()
 
         // Screen change observer
         NotificationCenter.default.addObserver(
@@ -651,8 +651,21 @@ class PanelWindowController: NSObject, NSWindowDelegate {
         if !panel.isVisible {
             panel.orderFrontRegardless()
         }
-        MascotAnimationGate.shared.setPanelVisible(true)
-        MascotAnimationGate.shared.setIdleSettled(isIslandSettled())
+        syncMascotAnimationGate()
+    }
+
+    /// Push the panel's current visibility / surface and the user's mascot
+    /// settings into the animation gate. `isExpanded` matters because a live
+    /// mascot TimelineView re-runs the panel's whole layout pass on every
+    /// display cycle (#299), and the expanded panel is the largest tree —
+    /// "Animate while expanded" (Settings → Mascots) lets users keep the
+    /// mascots still there and reclaim that main-thread time.
+    private func syncMascotAnimationGate() {
+        let gate = MascotAnimationGate.shared
+        gate.setPanelVisible(true)
+        gate.setExpanded(appState.surface.isExpanded)
+        gate.setAnimatesWhenExpanded(SettingsManager.shared.mascotAnimateExpanded)
+        gate.setIdleSettled(isIslandSettled())
     }
 
     /// Collapsed island with nothing running — the state a Mac spends most of

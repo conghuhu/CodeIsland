@@ -335,7 +335,7 @@ CodeIsland installs lightweight hooks into each tool's own config. When the tool
 | **General** | Language, launch at login, display selection |
 | **Behavior** | Auto-expand (approvals and questions separately), hover delay, smart suppress, completion style, follow-up reminders, session cleanup, silence rules, auto-approve, push notifications, webhook |
 | **Appearance** | Panel size, notch width, font size, reply lines, open/close speed, project name, git branch, task progress, session recap, model label, usage stats, plan limits |
-| **Mascots** | Preview every character and its animations |
+| **Mascots** | Preview every character and its animations, animation speed, default mascot, and the **animate while expanded** switch (turn it off if the open island feels laggy) |
 | **Sound** | 8-bit sounds per event, volume, quiet hours, mute while away |
 | **Shortcuts** | Global hotkeys for toggle, approve, deny, always-allow, skip, jump |
 | **Remote** | SSH hosts and per-host directory filters |

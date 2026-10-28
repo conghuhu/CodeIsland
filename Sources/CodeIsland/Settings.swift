@@ -111,6 +111,11 @@ enum SettingsKey {
 
     // Mascot
     static let mascotSpeed = "mascotSpeed"
+    /// Keep the mascots animating while the island is expanded. Off holds them
+    /// at their status pose while the panel is open — a live mascot TimelineView
+    /// re-runs the whole panel's layout pass on every display cycle, so this is
+    /// the first switch to turn off when hovering or expanding feels laggy.
+    static let mascotAnimateExpanded = "mascotAnimateExpanded"
 
     // Session grouping
     static let sessionGroupingMode = "sessionGroupingMode"
@@ -224,6 +229,8 @@ struct SettingsDefaults {
 
     static let mascotSpeed = 100  // percentage: 0–300, 0 = silent
 
+    static let mascotAnimateExpanded = true
+
     static let sessionGroupingMode = "all"
 
     static let showToolStatus = true
@@ -324,6 +331,7 @@ class SettingsManager {
             SettingsKey.maxToolHistory: SettingsDefaults.maxToolHistory,
             SettingsKey.showTaskProgress: SettingsDefaults.showTaskProgress,
             SettingsKey.mascotSpeed: SettingsDefaults.mascotSpeed,
+            SettingsKey.mascotAnimateExpanded: SettingsDefaults.mascotAnimateExpanded,
             SettingsKey.sessionGroupingMode: SettingsDefaults.sessionGroupingMode,
             SettingsKey.showToolStatus: SettingsDefaults.showToolStatus,
             SettingsKey.collapsedWidthScale: SettingsDefaults.collapsedWidthScale,
@@ -475,6 +483,12 @@ class SettingsManager {
     var defaultSource: String {
         get { defaults.string(forKey: SettingsKey.defaultSource) ?? SettingsDefaults.defaultSource }
         set { defaults.set(newValue, forKey: SettingsKey.defaultSource) }
+    }
+
+    /// Settings → Mascots › "Animate while expanded".
+    var mascotAnimateExpanded: Bool {
+        get { defaults.bool(forKey: SettingsKey.mascotAnimateExpanded) }
+        set { defaults.set(newValue, forKey: SettingsKey.mascotAnimateExpanded) }
     }
 
     /// All known auto-approvable tool names (for UI display).

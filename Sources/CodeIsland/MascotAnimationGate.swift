@@ -34,6 +34,13 @@ final class MascotAnimationGate: ObservableObject {
     /// mascot is asleep in a ~20pt strip and nothing is happening.
     @Published private(set) var isIdleSettled: Bool = false
 
+    /// True while the island is expanded (session list, approval card, …).
+    @Published private(set) var isExpanded: Bool = false
+
+    /// Settings → Mascots › "Animate while expanded". Off holds the mascots
+    /// still whenever the panel is open; the collapsed bar keeps animating.
+    @Published private(set) var animatesWhenExpanded: Bool = true
+
     /// System Settings › Accessibility › Display › Reduce motion. Read in
     /// `start()`, so a test process (which never starts the gate) keeps
     /// animating whatever the machine running it is set to.
@@ -42,6 +49,7 @@ final class MascotAnimationGate: ObservableObject {
     /// Whether mascot per-frame animations should run right now.
     var animationsActive: Bool {
         Self.shouldAnimate(isVisible: isPanelVisible, isAwake: isAwake, isIdleSettled: isIdleSettled,
+                           isExpanded: isExpanded, animatesWhenExpanded: animatesWhenExpanded,
                            reduceMotion: reduceMotion)
     }
 
@@ -53,7 +61,8 @@ final class MascotAnimationGate: ObservableObject {
     /// run while the panel is visible *and* the machine is awake — there is no
     /// point burning frames behind a hidden panel or during sleep.
     ///
-    /// The third condition is the expensive one. A live `TimelineView` does not
+    /// The third condition is the expensive one; the expanded state is the
+    /// other. A live `TimelineView` does not
     /// merely run its own schedule: it keeps SwiftUI's update machinery on a
     /// display link, and every cycle re-runs the whole panel's layout pass. That
     /// measured at ~7.6% CPU forever on an idle Mac, against ~2% with no live
@@ -63,11 +72,20 @@ final class MascotAnimationGate: ObservableObject {
     /// a static sleeping frame instead. Any state change — a session waking, the
     /// panel expanding on hover — re-enables it immediately. (#299)
     ///
+    /// An expanded panel is the worst case for that per-cycle layout: the tree
+    /// is at its largest. Settings → Mascots therefore lets users keep the
+    /// mascots still *while expanded* (`mascotAnimateExpanded`, on by default);
+    /// the collapsed bar keeps animating either way.
+    ///
     /// With Reduce Motion on, the mascots hold their status pose instead of
     /// looping forever next to whatever the user is reading.
     static func shouldAnimate(isVisible: Bool, isAwake: Bool, isIdleSettled: Bool = false,
+                              isExpanded: Bool = false, animatesWhenExpanded: Bool = true,
                               reduceMotion: Bool = false) -> Bool {
-        isVisible && isAwake && !isIdleSettled && !reduceMotion
+        guard isVisible, isAwake, !isIdleSettled, !reduceMotion else { return false }
+        // Expanded is the expensive state: the panel is at its largest. The
+        // switch lets users keep the mascots still there (Settings → Mascots).
+        return !isExpanded || animatesWhenExpanded
     }
 
     /// Begin observing system sleep/wake and the Reduce Motion setting. Idempotent.
@@ -127,6 +145,24 @@ final class MascotAnimationGate: ObservableObject {
         guard isIdleSettled != settled else { return }
         isIdleSettled = settled
         if !settled { epoch &+= 1 }
+    }
+
+    /// Report whether the island is expanded. Leaving the expanded state
+    /// re-enables the timelines (unless the user turned them off there) and
+    /// re-anchors their schedules.
+    func setExpanded(_ expanded: Bool) {
+        guard isExpanded != expanded else { return }
+        let wasActive = animationsActive
+        isExpanded = expanded
+        if !wasActive && animationsActive { epoch &+= 1 }
+    }
+
+    /// Follow Settings → Mascots › "Animate while expanded".
+    func setAnimatesWhenExpanded(_ enabled: Bool) {
+        guard animatesWhenExpanded != enabled else { return }
+        let wasActive = animationsActive
+        animatesWhenExpanded = enabled
+        if !wasActive && animationsActive { epoch &+= 1 }
     }
 
     private func setAwake(_ awake: Bool) {
