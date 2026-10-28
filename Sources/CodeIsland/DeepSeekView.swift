@@ -118,8 +118,8 @@ struct DeepSeekView: View {
             Canvas { c, sz in
                 let v = V(sz)
                 let bob = CGFloat(sin(t * 2 * .pi / 1.2)) * 0.45
-                let fin = CGFloat(sin(t * 2 * .pi / 0.65)) * 0.5
-                let open = MascotMotion.blink(t, seed: 0x0)
+                let fin = CGFloat(sin(t * 2 * .pi / 0.6)) * 0.5
+                let open = MascotMotion.blink(t, seed: 0xD5E2)
                 drawWhale(c, v, dy: bob, eyeH: 0.25 + open * 0.85, finDy: fin)
                 drawSpout(c, v, t: t, intensity: 1.0, dy: bob)
             }
